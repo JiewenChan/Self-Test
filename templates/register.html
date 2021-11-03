@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Register
+        </title>
+        <style type="text/css">
+            [v-cloak]{
+                display: none;
+            }
+
+            div{text-align: center;}
+
+            .middle{
+                margin-top: 200px;
+            }
+
+            .center{
+                margin-top: auto;
+                margin-bottom: auto;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .notbold{
+                font-weight: normal;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="middle" id="app" v-cloak>
+            <h1>Register</h1>
+            <table class="center">
+                <tr>
+                    <td style="text-align: left;">賬號</td>
+                    <td style="text-align: left;">(Username)</td>
+                    <td style="text-align: right;">：</td>
+                    <td><input type="username" v-model="username"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">密碼</td>
+                    <td style="text-align: left;">(Password)</td>
+                    <td style="text-align: right;">：</td>
+                    <td><input type="password" v-model="password_1"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">確認密碼</td>
+                    <td style="text-align: right;">(Re-enter Password)</td>
+                    <td style="text-align: right;">：</td>
+                    <td><input type="password" v-model="password_2"></td>
+                </tr>
+            </table>
+            <br/><br/>
+            <button v-on:click="check_register">確認 (Confirm)</button>
+        </div>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+            let vm = new Vue({
+                el:'#app',
+                data:{
+                    title:'WELCOME TO PRACTICE',
+                    email:'',
+                    username:'',
+                    password:'',//登入密碼
+                    password_1:'',//注冊密碼1
+                    password_2:'',//注冊密碼2
+                    info:'',
+                },
+
+                methods:{
+
+                    check_register:function(){//注冊新賬號
+                        if(this.username == '')
+                            this.info='Please enter your username';
+                        else if(this.password_1 == '' || this.password_2 == '')
+                            this.info='Please enter your password';
+                        else if(this.password_1 != this.password_2)
+                            this.info='Password is incorrect';
+                        else
+                            this.info='Welcome to practice';
+
+                        if(this.info==='Welcome to practice'){
+                            axios.post("http://127.0.0.1:5000/registerpage",{
+                                username: this.username,
+                                password: this.password_1
+                            }).then((res)=>{
+                                console.log(res.data);
+                                if(res.data.status==="success")
+                                    window.location.href='user.html';
+                                else
+                                    alert(res.data.status);
+                            })
+                        }
+                        else
+                            alert(this.info);
+        }
+                }
+            })
+        </script>
+    </body>
+</html>

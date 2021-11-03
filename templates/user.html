@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Welcome
+        </title>
+        <style type="text/css">
+            [v-cloak]{
+                display: none;
+            }
+
+            div{text-align: center;}
+
+            .middle{
+                margin-top: 80px;
+            }
+
+            .center{
+                margin-top: auto;
+                margin-bottom: auto;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .notbold{
+                font-weight: normal;
+            }
+        </style>
+    </head>
+
+    <body>
+        
+        {% raw %}
+        <div id="app">
+            <button v-on:click="logout">Log Out</button><!--回到登入界面-->
+            <div class="middle" v-cloak>
+                
+                <h1>Hi, {{username}}<br/><br/></h1>
+                <table class="center">
+                    <h3>Friend List</h3>
+                    <tr>                    
+                        <th style="text-align: center;">Friend</th>
+                        <th style="text-align: center;">Email</th>
+                    </tr>
+                    <tr v-for="(item,index) in friend">
+                        <td style="text-align: left;">{{ item.name }}</td>
+                        <td style="text-align: left;">{{ item.email }}</td>
+                    </tr>
+                </table>
+                <br/><br/>
+                <a href="edit.html"><button>更新資訊 (Update Info)</button></a>
+            </div>
+        </div>
+        {% endraw %}
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js'></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+            let vm = new Vue({
+                el:'#app',
+                data:{
+                    title:'WELCOME TO PRACTICE',
+                    email:'',
+                    username:'',
+                    password:'',//登入密碼
+                    password_1:'',//注冊密碼1
+                    password_2:'',//注冊密碼2
+                    info:'',
+                    friend: [],
+                    new_friend:'(name)',
+                    new_email:'(email)'
+                },
+                methods: {
+                    logout:function(){
+                        console.log('hoho')
+                        axios.post("http://127.0.0.1:5000/logout").then(()=>{
+                            window.location.href='/';
+                        })
+                    }
+                },
+                mounted(){
+                    axios.post("http://127.0.0.1:5000/getlist").then((res)=>{
+                        this.friend=res.data.friendlist;
+                    })
+                }
+            })
+        </script>
+    </body>
+</html>
