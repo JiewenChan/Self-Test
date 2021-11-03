@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div>
+        <h3>login</h3>
+        Username: <input type="text" id="lname"><br>
+        Password: <input type="text" id="lpass">
+        <br>
+        <button onclick="login()">submit</button>
+        <p id="login_message"></p>
+        <hr>
+        <h3>register</h3>
+        Username: <input type="text" id="rname"><br>
+        Password: <input type="text" id="rpass">
+        <br>
+        <button onclick="register()">submit</button>
+        <p id="register_message"></p>
+        <hr>
+        <h3>Get list</h3>
+        Username: <input type="text" id="gname"><br>
+        <button onclick="getlist()">submit</button>
+        <hr>
+        <h3>Update list</h3>
+        Username: <input type="text" id="uname"><br>
+        friendname: <input type="text" id="fname"><br>
+        friendemail: <input type="text" id="femail"><br>
+        <button onclick="updatelist()">submit</button>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function login() {
+            let x = document.getElementById("lname").value; 
+            let y = document.getElementById("lpass").value; 
+            console.log(x,y);
+            axios.post("http://127.0.0.1:5000/loginpage",{
+                username: x,
+                password: y
+            }).then((res)=>{
+                console.log(res.data);
+                if(res.data.status==="success")
+                    document.getElementById("login_message").innerHTML = "loign success";
+                else
+                document.getElementById("login_message").innerHTML = "wrong";
+            }).catch(()=>{
+                document.getElementById("login_message").innerHTML = "loign fail";
+            })
+        }
+        function register() {
+            let x = document.getElementById("rname").value; 
+            let y = document.getElementById("rpass").value; 
+            console.log(x,y);
+            axios.post("http://127.0.0.1:5000/registerpage",{
+                username: x,
+                password: y
+            }).then((res)=>{
+                console.log(res.data);
+                if(res.data.status==="success")
+                    document.getElementById("register_message").innerHTML = "register successfully";
+            }).catch(()=>{
+                document.getElementById("register_message").innerHTML = "fail";
+            })
+        }
+        function getlist() {
+            let x = document.getElementById("gname").value; 
+            console.log(x);
+            axios.post("http://127.0.0.1:5000/getlist",{
+                username: x
+            }).then((res)=>{
+                console.log(res.data);
+            })
+        }
+        function updatelist() {
+            let x = document.getElementById("uname").value; 
+            let y = document.getElementById("fname").value; 
+            let z = document.getElementById("femail").value; 
+            console.log(x);
+            axios.post("http://127.0.0.1:5000/getlist",{
+                username: x
+            }).then((res)=>{
+                console.log(x,y,z);
+                axios.post("http://127.0.0.1:5000/updatelist",{
+                    username: x,
+                    friendname: y,
+                    friendemail: z
+                })
+            })
+        }
+    </script>
+</body>
+</html>
