@@ -61,11 +61,22 @@ def updatelist():
     z = post_data.get('friendemail')
     print(x,y,z)
     doc = mongo.db.user.find_one({'username':x})
-    flist=doc['friendlist']
+    flist = doc['friendlist']
+    
+    print("flist: ", flist)
+
+    for account in flist:
+        print("account: ", account)
+        if account['name'] == y:
+            account['email'] = z
+            newvalues = { "$set": { "friendlist": flist } }
+            mongo.db.user.update_one({'username':x},newvalues)
+            return jsonify({ 'status': 'success' })
+    
     flist.append({'name':y,'email':z})
-    print(flist)
     newvalues = { "$set": { "friendlist": flist } }
     mongo.db.user.update_one({'username':x},newvalues)
+
     return jsonify({
         'status': 'success'
     })
